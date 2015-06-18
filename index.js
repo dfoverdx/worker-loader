@@ -20,7 +20,9 @@ module.exports.pitch = function(request) {
 	}
 	var workerCompiler = this._compilation.createChildCompiler("worker", outputOptions);
 	workerCompiler.apply(new WebWorkerTemplatePlugin(outputOptions));
-	workerCompiler.apply(new SingleEntryPlugin(this.context, "!!" + request, "main"));
+	
+	var requestName = query.name || request.replace(/^.*[\\\/](.*)(\.[^\.]*)$/, '$1');
+	workerCompiler.apply(new SingleEntryPlugin(this.context, "!!" + request, requestName));
 	if(this.options && this.options.worker && this.options.worker.plugins) {
 		this.options.worker.plugins.forEach(function(plugin) {
 			workerCompiler.apply(plugin);
